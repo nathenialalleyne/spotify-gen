@@ -8,6 +8,11 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z.enum(["development", "test", "production"]),
+    SPOTIFY_CLIENT_ID: z.string().min(1),
+    SPOTIFY_CLIENT_SECRET: z.string().min(1),
+    REDIRECT_URL: z.string().min(1),
+    OPENAI_API_KEY: z.string().min(1),
+    SUPABASE_KEY: z.string().min(1),
   },
 
   /**
@@ -25,6 +30,11 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
+    SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
+    SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
+    REDIRECT_URL: process.env.REDIRECT_URL,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    SUPABASE_KEY: process.env.SUPABASE_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
