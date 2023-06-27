@@ -35,7 +35,7 @@ export default function Dashbaord() {
             }
         }).then(res => res.json()).then(data => {
             setData(data.items)
-            console.log('data', data.items.map((item: any) => item.name))
+            console.log('data', data.items.map((item: any) => item))
         })
     }
 
@@ -47,6 +47,8 @@ export default function Dashbaord() {
             {sessionInfo && (<div>
                 <h1>{sessionInfo.user.id}</h1>
                 <button onClick={getPlaylist}>click to view recent playlists</button>
+                {data && data.map((item: any) => <div key={item.id}>{item.name}</div>)}
+                <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${data[2].id}?utm_source=generator`} width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>)}
         </div >
     )
