@@ -9,16 +9,17 @@ export default async function getAccessToken(authorizationCode: string) {
     grant_type: "authorization_code",
     code: authorizationCode,
     redirect_uri: redirectUri,
-    client_id: clientId,
-    client_secret: clientSecret,
   };
 
   const response = await fetch(tokenEndpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      Authorization:
+        "Basic " +
+        Buffer.from(clientId + ":" + clientSecret).toString("base64"),
     },
-    body: new URLSearchParams(data as Record<string, string>),
+    body: JSON.stringify(data),
   });
 
   const json = await response.json();

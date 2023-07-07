@@ -7,27 +7,29 @@ import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 
+const session = await supabase.auth.getSession()
+
 const Home: NextPage = () => {
   const [user, setUser] = useState<User>()
   const [accessToken, setAccessToken] = useState<string>()
 
   const router = useRouter()
 
-  const session = supabase.auth.getSession()
 
   const { data, refetch } = api.example.hello.useQuery({
     code: accessToken ? accessToken : "",
   }, { enabled: false });
 
   supabase.auth.onAuthStateChange((event, session) => {
-    console.log(event)
     if (event === 'SIGNED_IN') {
       router.push('/dashboard')
     }
   })
 
   const handleSignIn = async () => {
-    supabase.auth.signInWithOAuth({ provider: 'spotify' })
+    session.data.session?.user ?
+      router.push('/dashboard') :
+      await supabase.auth.signInWithOAuth({ provider: 'spotify', options: { scopes: 'playlist-modify-public' } })
   }
 
   const handleSignOut = async () => {
