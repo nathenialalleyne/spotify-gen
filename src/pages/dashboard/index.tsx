@@ -24,6 +24,7 @@ export default function Dashbaord() {
 
     const check = async () => {
         const provider = await sessionInfo?.provider_token
+        console.log(provider)
         provider ? await refetch() : (await supabase.auth.signOut() && router.push('/', { query: { error: 'no provider token' } }))
     }
 
@@ -41,7 +42,7 @@ export default function Dashbaord() {
                 <h1>{sessionInfo.user.id}</h1>
                 <button onClick={async () => {
                     await check()
-                    console.log(playlistData as object, typeof playlistData)
+                    console.log(playlistData, typeof playlistData)
                 }}>click to view recent playlists</button>
                 {playlist && <div>
                     <iframe className="rounded-lg" src={''}

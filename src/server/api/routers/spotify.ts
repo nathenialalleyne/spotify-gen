@@ -15,62 +15,27 @@ export const spotifyRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       if (session.data) {
-        // const aiRecommendation = await getAIRecommendations(
-        //   input.playlist_description
-        // );
+        const aiRecommendation = await getAIRecommendations(
+          input.playlist_description
+        );
 
-        // if (!aiRecommendation) {
-        //   throw new TRPCError({ code: "BAD_REQUEST" });
-        // }
-        // const getID = await fetch(`https://api.spotify.com/v1/me`, {
-        //   headers: {
-        //     Authorization: `Bearer ${input.provider_token}}`,
-        //   },
-        // });
-        // const jsonID = await getID.json();
-        // const userID = jsonID.id;
-        // const createPlaylist = await fetch(
-        //   `https://api.spotify.com/v1/users/${userID}/playlists`,
-        //   {
-        //     method: "POST",
-        //     headers: {
-        //       Authorization: `Bearer ${input.provider_token}}`,
-        //     },
-        //     body: JSON.stringify({
-        //       name: "New Playlist",
-        //       description: "New playlist description",
-        //       public: true,
-        //     }),
-        //   }
-        // );
-        // const jsonPlaylist = await createPlaylist.json();
-        // const playlistID = jsonPlaylist.id;
+        if (!aiRecommendation) {
+          throw new TRPCError({ code: "BAD_REQUEST" });
+        }
 
-        // const addTracksHeaders: {
-        //   [key: string]: string;
-        // } = {
-        //   Authorization: `Bearer ${input.provider_token}}`,
-        //   "Content-Type": "application/json",
-        // };
-
-        // Object.entries(aiRecommendation).forEach(([key, value]) => {
-        //   if (value) {
-        //     addTracksHeaders[key] = String(value);
-        //   }
-        // });
-
-        const urlSearchParams = new URLSearchParams({
-          seed_genres: "pop",
-          limit: "10",
-          seed_artists: "0LcJLqbBmaGUft1e9Mm8HV",
-          seed_tracks: "0c6xIDDpzE81m2q797ordA",
-        });
+        const queryString = Object.keys(aiRecommendation)
+          .map(
+            (key) =>
+              `${encodeURIComponent(key)}=${encodeURIComponent(
+                aiRecommendation[key]
+              )}`
+          )
+          .join("&");
 
         const addTracks = await fetch(
-          "https://api.spotify.com/v1/recommendations " + urlSearchParams,
+          "https://api.spotify.com/v1/recommendations?" + queryString,
           {
             method: "GET",
-
             headers: {
               Authorization: `Bearer ${input.provider_token}}`,
             },
@@ -78,8 +43,50 @@ export const spotifyRouter = createTRPCRouter({
         );
 
         const jsonTracks = await addTracks.json();
+        const trackIDs = jsonTracks.tracks.map((track: any) => track.uri);
 
-        return jsonTracks;
+        const getID = await fetch(`https://api.spotify.com/v1/me`, {
+          headers: {
+            Authorization: `Bearer ${input.provider_token}}`,
+          },
+        });
+        const jsonID = await getID.json();
+        const userID = jsonID.id;
+        const createPlaylist = await fetch(
+          `https://api.spotify.com/v1/users/${userID}/playlists`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${input.provider_token}}`,
+            },
+            body: JSON.stringify({
+              name: "New Playlist",
+              description: "New playlist description",
+              public: true,
+            }),
+          }
+        );
+        const jsonPlaylist = await createPlaylist.json();
+        const playlistID = await jsonPlaylist.id;
+
+        if (!playlistID) {
+          throw new TRPCError({ code: "BAD_REQUEST" });
+        }
+
+        const addToPlaylist = await fetch(
+          `https://api.spotify.com/v1/playlists/${playlistID}/tracks`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${input.provider_token}}`,
+            },
+            body: JSON.stringify({
+              uris: trackIDs,
+            }),
+          }
+        );
+
+        return addToPlaylist;
       }
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }),
