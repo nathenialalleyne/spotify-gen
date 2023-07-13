@@ -10,6 +10,7 @@ export default function Dashbaord() {
     const [sessionInfo, setSessionInfo] = useState<Session | null>()
     const [playlist, setPlaylist] = useState()
     const [playlistDescription, setPlaylistDescription] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const router = useRouter()
     const user = supabase.auth.getUser()
@@ -30,8 +31,11 @@ export default function Dashbaord() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setLoading(true)
         await check()
         playlistData && setPlaylist(playlistData)
+        console.log()
+        setLoading(false)
     }
 
 
@@ -47,8 +51,9 @@ export default function Dashbaord() {
                 </div>
                 {sessionInfo && (<div>
                     <button type='submit'>Create Playlist</button>
+                    {loading && <div>loading...</div>}
                     {playlist && <div>
-                        <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${playlist}?utm_source=generator`}
+                        <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${playlistData}?utm_source=generator`}
                             width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
                         </iframe>
                     </div>}
