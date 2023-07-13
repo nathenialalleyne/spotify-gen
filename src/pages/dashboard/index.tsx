@@ -9,6 +9,7 @@ import { api } from '@/utils/api'
 export default function Dashbaord() {
     const [sessionInfo, setSessionInfo] = useState<Session | null>()
     const [playlist, setPlaylist] = useState()
+    const [playlistDescription, setPlaylistDescription] = useState('')
 
     const router = useRouter()
     const user = supabase.auth.getUser()
@@ -23,24 +24,24 @@ export default function Dashbaord() {
 
     const check = async () => {
         const provider = await sessionInfo?.provider_token
-        provider ? refetch() : (await supabase.auth.signOut() && router.push('/', { query: { error: 'no provider token' } }))
+        provider ? await refetch() : (await supabase.auth.signOut() && router.push('/', { query: { error: 'no provider token' } }))
     }
 
 
 
-    const { data: playlistData, refetch } = api.spotify.createPlaylist.useQuery({ provider_token: sessionInfo?.provider_token as string }, { enabled: false })
+    const { data: playlistData, refetch } = api.spotify.createPlaylist.useQuery({ provider_token: sessionInfo?.provider_token as string, playlist_description: playlistDescription }, { enabled: false })
 
     return (
         <div className={styles.background}>
             <div className={styles.inputContainer}>
                 <label className={styles.label}>Playlist Description</label>
-                <input className={styles.input}></input>
+                <input className={styles.input} onChange={(e: any) => setPlaylistDescription(e.target.value)}></input>
             </div>
             {sessionInfo && (<div>
                 <h1>{sessionInfo.user.id}</h1>
                 <button onClick={async () => {
-                    check()
-                    // console.log(playlistData)
+                    await check()
+                    console.log(playlistData as object, typeof playlistData)
                 }}>click to view recent playlists</button>
                 {playlist && <div>
                     <iframe className="rounded-lg" src={''}

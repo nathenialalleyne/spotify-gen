@@ -3,45 +3,83 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { supabase } from "@/lib/supabaseClient";
 import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
+import openai, { getAIRecommendations } from "@/utils/openai";
+import { stdout } from "process";
 
 const session = await supabase.auth.getSession();
 
 export const spotifyRouter = createTRPCRouter({
   createPlaylist: publicProcedure
-    .input(z.object({ provider_token: z.string() }))
+    .input(
+      z.object({ provider_token: z.string(), playlist_description: z.string() })
+    )
     .query(async ({ input }) => {
       if (session.data) {
-        const getID = await fetch(`https://api.spotify.com/v1/me`, {
-          headers: {
-            Authorization: `Bearer ${input.provider_token}}`,
-          },
+        // const aiRecommendation = await getAIRecommendations(
+        //   input.playlist_description
+        // );
+
+        // if (!aiRecommendation) {
+        //   throw new TRPCError({ code: "BAD_REQUEST" });
+        // }
+        // const getID = await fetch(`https://api.spotify.com/v1/me`, {
+        //   headers: {
+        //     Authorization: `Bearer ${input.provider_token}}`,
+        //   },
+        // });
+        // const jsonID = await getID.json();
+        // const userID = jsonID.id;
+        // const createPlaylist = await fetch(
+        //   `https://api.spotify.com/v1/users/${userID}/playlists`,
+        //   {
+        //     method: "POST",
+        //     headers: {
+        //       Authorization: `Bearer ${input.provider_token}}`,
+        //     },
+        //     body: JSON.stringify({
+        //       name: "New Playlist",
+        //       description: "New playlist description",
+        //       public: true,
+        //     }),
+        //   }
+        // );
+        // const jsonPlaylist = await createPlaylist.json();
+        // const playlistID = jsonPlaylist.id;
+
+        // const addTracksHeaders: {
+        //   [key: string]: string;
+        // } = {
+        //   Authorization: `Bearer ${input.provider_token}}`,
+        //   "Content-Type": "application/json",
+        // };
+
+        // Object.entries(aiRecommendation).forEach(([key, value]) => {
+        //   if (value) {
+        //     addTracksHeaders[key] = String(value);
+        //   }
+        // });
+
+        const urlSearchParams = new URLSearchParams({
+          seed_genres: "pop",
+          limit: "10",
+          seed_artists: "0LcJLqbBmaGUft1e9Mm8HV",
+          seed_tracks: "0c6xIDDpzE81m2q797ordA",
         });
-        const jsonID = await getID.json();
-        const userID = jsonID.id;
-        const createPlaylist = await fetch(
-          `https://api.spotify.com/v1/users/${userID}/playlists`,
+
+        const addTracks = await fetch(
+          "https://api.spotify.com/v1/recommendations " + urlSearchParams,
           {
-            method: "POST",
+            method: "GET",
+
             headers: {
               Authorization: `Bearer ${input.provider_token}}`,
             },
-            body: JSON.stringify({
-              name: "New Playlist",
-              description: "New playlist description",
-              public: true,
-            }),
           }
         );
-        const jsonPlaylist = await createPlaylist.json();
 
-        return jsonPlaylist;
-        const response = await fetch(`https://api.spotify.com/v1/`, {
-          headers: {
-            Authorization: `Bearer ${input.provider_token}}`,
-          },
-        });
-        const json = await response.json();
-        return json;
+        const jsonTracks = await addTracks.json();
+
+        return jsonTracks;
       }
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }),
