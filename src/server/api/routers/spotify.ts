@@ -86,7 +86,7 @@ export const spotifyRouter = createTRPCRouter({
           }
         );
 
-        return addToPlaylist;
+        return playlistID;
       }
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }),

@@ -17,7 +17,7 @@ export const getAIRecommendations = async (playlistDesc: string) => {
       {
         role: "system",
         content:
-          "You are to generate 10 songs based on the playlist description with the function given. You may infer what values should be entered into the function, do not add any parameters that arent already defined and the function MUST include the specified required parameters, those being seed_artists, limit, seed_genres, seed_tracks. Make sure you use every paramater given do not pick and choose which to include. The total number of seed artists, seed tracks, and seed genres must add up to 5 or less. The playlist description is as follows: " +
+          "You are to generate the object for a spotify recommendations endpoint request based on the playlist description with the function given. You may infer what properties and values should be entered into the function to create a playlist that most accurately depicts the description given, as an example, if the description reads, 'Create an RNB playlist with 15 songs that is mellow and sad', you'll provide whatever properties are required to create that, do not add any parameters that arent already defined and the function MUST include the specified required parameters, those being seed_artists, limit, seed_genres, seed_tracks. The total number of seed artists, seed tracks, and seed genres must add up to 5 or less. The playlist request/description is as follows: " +
           playlistDesc,
       },
     ],
@@ -259,24 +259,7 @@ export const getAIRecommendations = async (playlistDesc: string) => {
                 "Target value for valence. 0.0 <= target_valence <= 1.0",
             },
           },
-          required: [
-            "seed_artists",
-            "limit",
-            "seed_genres",
-            "seed_tracks",
-            "target_duration_ms",
-            "target_energy",
-            "target_instrumentalness",
-            "target_key",
-            "target_liveness",
-            "target_loudness",
-            "target_mode",
-            "target_popularity",
-            "target_speechiness",
-            "target_tempo",
-            "target_time_signature",
-            "target_valence",
-          ],
+          required: ["seed_artists", "limit", "seed_genres", "seed_tracks"],
         },
       },
     ],
