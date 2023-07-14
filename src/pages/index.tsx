@@ -17,10 +17,6 @@ const Home: NextPage = () => {
 
   const router = useRouter()
 
-  useEffect(() => {
-
-  }, [])
-
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') {
       router.push('/dashboard')
