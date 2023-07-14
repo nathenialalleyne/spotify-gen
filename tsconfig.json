@@ -27,7 +27,10 @@
       ],
       "@/supabase": [
         "./src/lib/supabaseClient.ts"
-      ]
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
     }
   },
   "include": [

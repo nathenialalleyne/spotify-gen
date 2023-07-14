@@ -1,10 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { supabase } from "@/lib/supabaseClient";
-import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
-import openai, { getAIRecommendations } from "@/utils/openai";
-import { stdout } from "process";
+import { getAIRecommendations } from "@/utils/openai";
+import getFormattedDate from "@/utils/formattedDate";
 
 const session = await supabase.auth.getSession();
 
@@ -69,7 +68,11 @@ async function getSpotifyID(provider_token: string) {
   }
 }
 
-async function createPlaylist(provider_token: string, userID: string) {
+async function createPlaylist(
+  provider_token: string,
+  userID: string,
+  playlist_description: string
+) {
   try {
     const createPlaylist = await fetch(
       `https://api.spotify.com/v1/users/${userID}/playlists`,
@@ -79,8 +82,8 @@ async function createPlaylist(provider_token: string, userID: string) {
           Authorization: `Bearer ${provider_token}`,
         },
         body: JSON.stringify({
-          name: "New Playlist",
-          description: "New playlist description",
+          name: `${getFormattedDate()} - AI Generated Playlist`,
+          description: `${playlist_description}`,
           public: true,
         }),
       }
@@ -137,7 +140,8 @@ export const spotifyRouter = createTRPCRouter({
           const getUserSpotifyID = await getSpotifyID(input.provider_token);
           const getPlaylistID = await createPlaylist(
             input.provider_token,
-            getUserSpotifyID
+            getUserSpotifyID,
+            input.playlist_description
           );
 
           const addToPlaylist = await addSongsToPlaylist(

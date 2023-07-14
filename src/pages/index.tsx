@@ -6,6 +6,8 @@ import { supabase } from "@/supabase"
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
+import classNames from "classnames";
+import BubbleContainer from "./components/BubbleContainer";
 
 const session = await supabase.auth.getSession()
 
@@ -15,10 +17,9 @@ const Home: NextPage = () => {
 
   const router = useRouter()
 
+  useEffect(() => {
 
-  const { data, refetch } = api.example.hello.useQuery({
-    code: accessToken ? accessToken : "",
-  }, { enabled: false });
+  }, [])
 
   supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') {
@@ -37,14 +38,18 @@ const Home: NextPage = () => {
   }
 
   return (
-    <>
-      {user ? (<button onClick={handleSignOut}>sign out</button>)
-        : <button onClick={handleSignIn}>sign in</button>}
-      <input></input>
-
-    </>
+    <div className={styles.background}>
+      <button onClick={handleSignIn}>sign in</button>
+      {/* <BubbleContainer /> */}
+    </div>
   );
 };
+
+const styles = {
+  background: 'bg-gray-900 w-screen h-screen flex justify-center items-center overflow-hidden p-4 relative',
+  circleContainer: 'w-screen h-screen absolute flex justify-between items-end -z-100',
+}
+
 
 export default Home;
 
