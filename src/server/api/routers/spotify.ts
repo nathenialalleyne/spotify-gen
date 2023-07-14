@@ -17,7 +17,7 @@ async function aiData(input: string) {
     }
 
     if (typeof aiRecommendation === "string") {
-      return aiRecommendation;
+      JSON.parse(aiRecommendation);
     }
 
     const queryString = Object.keys(aiRecommendation)
