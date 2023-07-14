@@ -34,9 +34,8 @@ export default function Dashbaord() {
         try {
             e.preventDefault()
             setLoading(true)
+            console.log(playlistDescription)
             await check()
-            playlistData && setPlaylist(playlistData)
-            console.log()
         } catch (error) {
             setError(true)
         }
@@ -57,11 +56,11 @@ export default function Dashbaord() {
                     <input className={styles.input} onChange={(e: any) => setPlaylistDescription(e.target.value)} required></input>
                 </div>
                 {sessionInfo && (<div>
-                    <button type='submit'>Create Playlist</button>
-                    {loading && <div>loading...</div>}
+
+                    {!loading ? <button type='submit'>Create Playlist</button> : <div>loading...</div>}
                     {error && <div>error</div>}
-                    {playlist && <div>
-                        <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${playlist}?utm_source=generator`}
+                    {playlistData && <div>
+                        <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${playlistData}?utm_source=generator`}
                             width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
                         </iframe>
                     </div>}
