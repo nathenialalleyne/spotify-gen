@@ -58,6 +58,7 @@ export default function Dashbaord() {
                 {sessionInfo && (<div>
 
                     {!loading ? <button type='submit'>Create Playlist</button> : <div>loading...</div>}
+                    <button onClick={supabase.auth.signOut}>sign out</button>
                     {error && <div>error</div>}
                     {playlistData && <div>
                         <iframe className="rounded-lg" src={`https://open.spotify.com/embed/playlist/${playlistData}?utm_source=generator`}
