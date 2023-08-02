@@ -33,6 +33,12 @@ export default function Dashbaord() {
         }
     }, [playlistData]);
 
+    useEffect(() => {
+        if (!user) {
+            router.push('/')
+        }
+    }, [router, user])
+
     const check = async () => {
         const provider = await sessionInfo?.provider_token
         console.log(provider)
@@ -62,9 +68,9 @@ export default function Dashbaord() {
     return (
         <div className={styles.background}>
             <header className={styles.header}>
-                <button className={styles.button} onClick={() => {
-                    supabase.auth.signOut()
-                    router.push('/')
+                <button className={styles.button} onClick={async () => {
+                    await supabase.auth.signOut()
+                    await router.push('/')
                 }}>Sign Out</button>
             </header>
 
