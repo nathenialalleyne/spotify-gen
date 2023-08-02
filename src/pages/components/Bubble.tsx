@@ -3,12 +3,11 @@ import classNames from 'classnames'
 
 type Props = {
     delay: string
-    time: number
     w?: string
     h?: string
 }
 
-export default function Bubble({ delay, time, w, h }: Props) {
+export default function Bubble({ delay, w, h }: Props) {
 
     const animations: { [key: string]: string } = {
         'animation-delay-100': 'animate-[move-up_linear_1s_infinite]',
