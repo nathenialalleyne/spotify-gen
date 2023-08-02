@@ -10,16 +10,25 @@ type Props = {
 
 export default function Bubble({ delay, time, w, h }: Props) {
 
-    const animations = {
+    const animations: { [key: string]: string } = {
         'animation-delay-100': 'animate-[move-up_linear_1s_infinite]',
+        'animation-delay-150': 'animate-[move-up_linear_1.5s_infinite]',
         'animation-delay-200': 'animate-[move-up_linear_2s_infinite]',
+        'animation-delay-250': 'animate-[move-up_linear_2.5s_infinite]',
         'animation-delay-300': 'animate-[move-up_linear_3s_infinite]',
+        'animation-delay-350': 'animate-[move-up_linear_3.5s_infinite]',
         'animation-delay-400': 'animate-[move-up_linear_4s_infinite]',
+        'animation-delay-450': 'animate-[move-up_linear_4.5s_infinite]',
         'animation-delay-500': 'animate-[move-up_linear_5s_infinite]',
+        'animation-delay-550': 'animate-[move-up_linear_5.5s_infinite]',
         'animation-delay-600': 'animate-[move-up_linear_6s_infinite]',
+        'animation-delay-650': 'animate-[move-up_linear_6.5s_infinite]',
         'animation-delay-700': 'animate-[move-up_linear_7s_infinite]',
+        'animation-delay-750': 'animate-[move-up_linear_7.5s_infinite]',
         'animation-delay-800': 'animate-[move-up_linear_8s_infinite]',
+        'animation-delay-850': 'animate-[move-up_linear_8.5s_infinite]',
         'animation-delay-900': 'animate-[move-up_linear_9s_infinite]',
+        'animation-delay-950': 'animate-[move-up_linear_9.5s_infinite]',
         'animation-delay-1000': 'animate-[move-up_linear_10s_infinite]',
         'animation-delay-2000': 'animate-[move-up_linear_20s_infinite]',
         'animation-delay-3000': 'animate-[move-up_linear_30s_infinite]',
@@ -30,6 +39,7 @@ export default function Bubble({ delay, time, w, h }: Props) {
         'animation-delay-8000': 'animate-[move-up_linear_80s_infinite]',
         'animation-delay-9000': 'animate-[move-up_linear_90s_infinite]',
         'animation-delay-10000': 'animate-[move-up_linear_100s_infinite]',
+
     }
 
     const styles = {

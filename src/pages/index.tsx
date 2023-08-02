@@ -12,21 +12,17 @@ const Home: NextPage = () => {
 
   const router = useRouter()
 
-  // supabase.auth.onAuthStateChange((event, session) => {
-  //   if (event === 'SIGNED_IN') {
-  //     router.push('/dashboard')
-  //   }
-  // })
-
   const handleSignIn = async () => {
     session.data.session?.user ?
       router.push('/dashboard') :
       await supabase.auth.signInWithOAuth({ provider: 'spotify', options: { scopes: 'playlist-modify-public' } })
   }
 
-  const handleSignOut = async () => {
-    supabase.auth.signOut()
-  }
+  useEffect(() => {
+    if (session.data.session?.user) {
+      router.push('/dashboard')
+    }
+  }, [])
 
   return (
     <div className={styles.background}>
