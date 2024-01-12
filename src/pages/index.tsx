@@ -27,6 +27,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.background}>
       <div className={styles.headingContainer}>
+        <h2 className='text-red-200'>Disclaimer: Due to the Spotify APIs verification process, only accounts specified by the developer can actually create playlists. sorry!</h2>
         <h1 className={styles.heading}>Unlock Your Unique Soundtrack with AI</h1>
         <h2 className={styles.subHeading}>Elevate Your Music Experience with Personalized Playlists, Crafted by the Magic of Artificial Intelligence</h2>
         <button className={styles.button} onClick={handleSignIn}>
@@ -40,7 +41,7 @@ const Home: NextPage = () => {
 };
 
 const styles = {
-  background: 'bg-gray-900 w-screen h-screen flex justify-center items-center overflow-x-hidden p-4 relative',
+  background: 'bg-gray-900 w-screen h-screen flex justify-center items-center overflow-hidden p-4 relative',
   heading: 'text-5xl sm:text-9xl font-bold text-center w-3/4 bg-gradient-to-r from-purple-700 to-pink-400 text-transparent bg-clip-text',
   subHeading: 'text-xl font-bold text-center sm:w-2/4 text-purple-400',
   headingContainer: 'flex flex-col justify-center items-center w-fit gap-12 z-20',
